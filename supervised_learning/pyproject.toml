@@ -2,12 +2,16 @@
 
 name = "supervised-learning"
 
+description = "Supervised learning projects from my post-graduate studies."
+
+version = "1.0.0"
+
 authors = [
     { name = "Abayomi Sosanya", email = "abayomi.sosanya@cix.csi.cuny.edu" },
 ]
 
 requires-python = ">=3.12"
 
-dependencies = ["numpy", "scipy", "pandas", "matplotlib", "sklearn"]
+dependencies = ["numpy", "scipy", "pandas", "matplotlib", "scikit-learn"]
 
 readme = "README.md"
