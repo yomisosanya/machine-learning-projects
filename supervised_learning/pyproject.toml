@@ -1,0 +1,13 @@
+[project]
+
+name = "supervised-learning"
+
+authors = [
+    { name = "Abayomi Sosanya", email = "abayomi.sosanya@cix.csi.cuny.edu" },
+]
+
+requires-python = ">=3.12"
+
+dependencies = ["numpy", "scipy", "pandas", "matplotlib", "sklearn"]
+
+readme = "README.md"
