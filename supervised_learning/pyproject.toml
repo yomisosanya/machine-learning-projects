@@ -12,6 +12,13 @@ authors = [
 
 requires-python = ">=3.12"
 
-dependencies = ["numpy", "scipy", "pandas", "matplotlib", "scikit-learn"]
+dependencies = [
+    "numpy",
+    "scipy",
+    "pandas",
+    "matplotlib",
+    "scikit-learn",
+    "ipykernel",
+]
 
 readme = "README.md"
