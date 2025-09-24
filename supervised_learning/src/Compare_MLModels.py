@@ -8,9 +8,11 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import LinearSVC
 from sklearn.tree import DecisionTreeClassifier
+import sys
 
 
 uri = Path("../../res/iris.csv")
+out_file = open(Path("../build/compare_model.txt"), "w")
 
 columns = ["sepal-length", "sepal-width", "petal-length", "petal-width", "class"]
 
@@ -39,13 +41,13 @@ def get_params():
     yield "Random Forest", RandomForestClassifier()
 
 
-def print_scores(title, cm, acc):
+def print_scores(title, cm, acc, file=sys.stdout):
 
-    print("{}\n".format(title))
-    print("The confusion matrix is: ")
-    print(cm)
-    print("The sum of the values is {}".format(np.sum(cm)))
-    print("The accuracy score: {}\n".format(acc))
+    print("{}\n".format(title), file=file)
+    print("The confusion matrix is: ", file=file)
+    print(cm, file=file)
+    print("The sum of the values is {}".format(np.sum(cm)), file=file)
+    print("The accuracy score: {}\n".format(acc), file=file)
 
 
 def get_scores(X, y, *, clf):
@@ -63,11 +65,7 @@ def get_scores(X, y, *, clf):
 for title, model in get_params():
     """ """
     cm, acc = get_scores(X=X, y=y, clf=model)
-    print_scores(title=title, cm=cm, acc=acc)
+    print_scores(title=title, cm=cm, acc=acc, file=out_file)
 
 
-# print("length of column is {}".format(len(df.columns)))
-
-# print(y)
-
-# print(X)
+out_file.close()

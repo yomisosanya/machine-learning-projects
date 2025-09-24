@@ -8,6 +8,7 @@ from sklearn.preprocessing import StandardScaler
 
 uri = Path("../../res/iris.csv")
 build_dir = Path("../build/")
+output_txt = open(Path("../build/pca.txt"), "w")
 
 columns = ["sepal-length", "sepal-width", "petal-length", "petal-width", "class"]
 
@@ -29,9 +30,11 @@ pca.fit(X_scaled)
 eigenvectors = pca.components_
 eigenvalues = pca.explained_variance_
 
-print("The eigenvalues are {}".format(eigenvalues))
-print("The eigenvectors are:")
-print(eigenvectors)
+print("The eigenvalues are {}".format(eigenvalues), file=output_txt)
+print("The eigenvectors are:", file=output_txt)
+print(eigenvectors, file=output_txt)
+
+output_txt.close()
 
 pca_range = np.arange(1, len(eigenvalues) + 1)
 
@@ -42,3 +45,4 @@ plt.xlabel("PCA")
 plt.ylabel("Eigenvalues")
 plt.grid(True)
 plt.savefig(Path("../build/scree.png"))
+plt.close()

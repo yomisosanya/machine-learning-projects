@@ -1,0 +1,45 @@
+Gaussian Naive Bayes
+
+The confusion matrix is: 
+[[50  0  0]
+ [ 0 47  3]
+ [ 0  3 47]]
+The sum of the values is 150
+The accuracy score: 0.96
+
+K Nearest Neighbor
+
+The confusion matrix is: 
+[[50  0  0]
+ [ 0 47  3]
+ [ 0  1 49]]
+The sum of the values is 150
+The accuracy score: 0.9733333333333334
+
+Linear SVC
+
+The confusion matrix is: 
+[[50  0  0]
+ [ 0 47  3]
+ [ 0  2 48]]
+The sum of the values is 150
+The accuracy score: 0.9666666666666667
+
+Decision Tree
+
+The confusion matrix is: 
+[[50  0  0]
+ [ 0 47  3]
+ [ 0  4 46]]
+The sum of the values is 150
+The accuracy score: 0.9533333333333334
+
+Random Forest
+
+The confusion matrix is: 
+[[50  0  0]
+ [ 0 47  3]
+ [ 0  3 47]]
+The sum of the values is 150
+The accuracy score: 0.96
+
