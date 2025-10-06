@@ -11,8 +11,8 @@ The eigenvectors are:
 
 The confusion matrix is:
 [[50  0  0]
- [ 0 46  4]
+ [ 0 47  3]
  [ 0  5 45]]
 
-The accuracy score is: 0.94
+The accuracy score is: 0.9466666666666667
 

@@ -39,7 +39,7 @@ Random Forest
 The confusion matrix is: 
 [[50  0  0]
  [ 0 47  3]
- [ 0  3 47]]
+ [ 0  4 46]]
 The sum of the values is 150
-The accuracy score: 0.96
+The accuracy score: 0.9533333333333334
 

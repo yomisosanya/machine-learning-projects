@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 def distance(points, centeroids):
@@ -62,6 +63,8 @@ if __name__ == "__main__":
     initial_centeroids = np.array(
         [np.mean(center, axis=0) for center in np.vsplit(points, n_clusters)]
     )
+
+
     plt.scatter(points[:, 0], points[:, 1])
     plt.scatter(
         initial_centeroids[:, 0],
@@ -70,8 +73,20 @@ if __name__ == "__main__":
         marker="o",
         c=["red", "purple", "orange"],
     )
-    # plt.show()
+    plt.savefig(Path('../build/kmeans-initial-plot.png'))
+    plt.close()
 
     centeroids, bins = kmeans(points, n_clusters=3)
     print("The coordinates of the final centers are")
     print(centeroids)
+
+    centeroids = np.array([np.mean(center, axis=0) for center in np.vsplit(points, n_clusters)])
+    colors = ['yellow', 'blue', 'green']
+    for bin, color in zip(bins, colors):
+        b = np.array(bin)
+        label = '{}; {}'.format(color,len(bin))
+        plt.scatter(b[:, 0], b[:, 1], c=color, label=label)
+        plt.scatter(centeroids[:, 0], centeroids[:, 1], s=100, marker='o', c=['red', 'purple', 'orange'])
+        plt.legend()
+        plt.savefig(Path('../build/kmean-final-plot.png'))
+        plt.close()
