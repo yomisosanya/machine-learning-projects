@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path
+import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_predict, KFold
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import LinearSVC
@@ -66,6 +67,20 @@ for title, model in get_params():
     """ """
     cm, acc = get_scores(X=X, y=y, clf=model)
     print_scores(title=title, cm=cm, acc=acc, file=out_file)
+
+
+class_names = df["class"].unique()
+
+for title, model in get_params():
+    """ """
+    cm, acc = get_scores(X=X, y=y, clf=model)
+    # print_scores(title=title, cm=cm, acc=acc)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+    disp.plot()
+    plt.title(title)
+    out = Path("../build") / "compare-{}.png".format(title.lower().replace(" ", "-"))
+    plt.savefig(out)
+    plt.close()
 
 
 out_file.close()
