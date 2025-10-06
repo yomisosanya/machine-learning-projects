@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from sklearn.decomposition import PCA
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.model_selection import cross_val_predict, KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
@@ -69,6 +69,13 @@ acc = accuracy_score(y, y_pred=y_pred)
 print("\nThe confusion matrix is:", file=output_txt)
 print("{}\n".format(cm), file=output_txt)
 print("The accuracy score is: {}\n".format(acc), file=output_txt)
+
+class_names = df["class"].unique()
+display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+display.plot()
+plt.title("Confusion Matrix")
+plt.savefig(Path("../build/confusion_matrix.png"))
+plt.close()
 
 
 output_txt.close()
