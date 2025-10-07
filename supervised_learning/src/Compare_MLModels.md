@@ -1,5 +1,9 @@
 <h2> Machine Language Classifier Comparison </h2>
 
+#### [https://github.com/yomisosanya/machine-learning-projects/tree/main/supervised_learning](https://github.com/yomisosanya/machine-learning-projects/tree/main/supervised_learning)
+
+### [GitHub Page](https://github.com/yomisosanya/machine-learning-projects/blob/main/supervised_learning/src/Compare_MLModels.md)
+
 <section>
   <h4>Models used:</h4>
   <ol>
