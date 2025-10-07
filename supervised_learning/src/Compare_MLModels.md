@@ -14,27 +14,27 @@
 <section>
  <h4>Naive Bayes</p>
  <img src="../build/compare-gaussian-naive-bayes.png"
-  alt="Naive Bayes image" width="350"
+  alt="Naive Bayes image" width="500"
   />
   <p></p>
 </section>
 
  <h4>KNN</h4>
  <img src="../build/compare-k-nearest-neighbor.png"
- alt="KNN image" width="350"
+ alt="KNN image" width="500"
  />
 
  <h4>SVM or Linear SVC</h4>
  <img src="../build/compare-linear-svc.png"
- alt="SVM image" width="350"
+ alt="SVM image" width="500"
  />
 
  <h4>Decision Tree</h4>
  <img src="../build/compare-decision-tree.png"
- alt="Naive Bayes" width="350"
+ alt="Naive Bayes" width="500"
  />
 
  <h4>Random Forest</h4>
  <img src="../build/compare-random-forest.png"
- alt="Naive Bayes" width="350"
+ alt="Naive Bayes" width="500"
  />
