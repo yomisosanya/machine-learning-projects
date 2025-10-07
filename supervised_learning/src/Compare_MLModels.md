@@ -12,7 +12,7 @@
 </section>
 <br/>
 <section>
- <h4>Naive Bayes</p>
+ <h4>Naive Bayes</h4>
  <img src="../build/compare-gaussian-naive-bayes.png"
   alt="Naive Bayes image" width="500"
   />
