@@ -1,0 +1,19 @@
+[project]
+
+name = "mnist-classifier"
+
+version = "1"
+
+description = "MNist classifier"
+
+authors = [
+    { name = "Abayomi Sosanya", email = "abayomi.sosanya@cix.csi.cuny.edu" },
+]
+
+requires-python = ">=3.12"
+
+dependencies = ['torch', 'torchvision']
+
+license = "CC0-1.0-Universal"
+
+readme = { file = "README.md", content-type = "text/markdown" }
