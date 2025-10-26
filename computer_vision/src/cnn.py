@@ -1,7 +1,7 @@
 from torchvision import datasets 
 from torchvision import transforms
 
-dataset_dir = '../../res/mnist'
+dataset_dir = '../../res'
 
 transform = transforms.Compose(
     [transforms.To_Tensor(),
