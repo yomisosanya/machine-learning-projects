@@ -1,22 +1,31 @@
+
 from torchvision import datasets, transforms
+
+__all__ = ['train', 'test']
 
 dataset_dir = '../../res'
 
 transform = transforms.Compose(
-    [transforms.To_Tensor(),
-    transforms.Normalize((0.1307,), (0.3081))]
-)
+    [transforms.To_Tensor(), transforms.Normalize((0.1307,), (0.3081))]
+    )
 
 train = datasets(
-    root = dataset_dir
-    train = True
-    download = False
+    root = dataset_dir,
+    train = True,
+    download = False,
     transform = transform
-)
+    )
 
 test = datasets(
-    root = dataset_dir
-    train = False
-    download = False
+    root = dataset_dir,
+    train = False,
+    download = False,
     transform = transform
-)
+    )
+
+
+def load_model():
+    pass
+
+def save_model():
+    pass

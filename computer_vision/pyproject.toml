@@ -12,7 +12,7 @@ authors = [
 
 requires-python = ">=3.12"
 
-dependencies = ['torch', 'torchvision']
+dependencies = ['torch', 'torchmetrics', 'torchvision', 'tqdm']
 
 license = "CC0-1.0-Universal"
 
