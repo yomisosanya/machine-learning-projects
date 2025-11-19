@@ -12,6 +12,8 @@ c2 = 256
 fc0 = 516
 cls = 10  # number of classes
 
+device = torch.device('cuda' if torch.cuda_is_available() else 'cpu')
+
 class Model(nn.Module):
 
     def __init__(self):
@@ -52,7 +54,7 @@ model = Model()
 criterion = nn.CrossEntropyLoss()
 
 
-def run(epochs: int, verbose: bool, out: TextIO = sys.stdout) :
+def train_model(epochs: int, verbose: bool = False, out: TextIO = sys.stdout) :
 
     kwargs = {'task': 'multiclass', 'num_classes': cls}
     accuracy = Accuracy(**kwargs)
@@ -60,23 +62,27 @@ def run(epochs: int, verbose: bool, out: TextIO = sys.stdout) :
     recall = Recall(average='macro', **kwargs)
     if verbose:
         pass
-    
-    for epoch in range(epochs):
-        print(f'Epoch {epoch + 1}/{epochs}', file=out)
 
+    for epoch in range(epochs):
+        print(f'epoch {epoch + 1}/{epochs}', file=out)
         for (images, labels) in dataset.train:
             probabilities = model(images, dim=1)
             predictions = torch.argmax(probabilities, dim=1)
             accuracy.update(predictions, labels)
             precision.update(predictions, labels)
             recall.update(predictions, labels)
-        print(f'Epoch accuracy: {accuracy.compute()}')
-        print(f'Epoch precision: {precision.compute()}')
-        print(f'Epoch recall: {recall.compute()}')
+        if verbose:
+            print(f'epoch accuracy: {accuracy.compute()}')
+            print(f'epoch precision: {precision.compute()}')
+            print(f'epoch recall: {recall.compute()}')
         accuracy.reset()
         precision.reset()
         recall.reset()
+
+def test_model():
+    pass
         
+
 
 
 
