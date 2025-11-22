@@ -1,3 +1,4 @@
+import math
 import torch
 import torch.nn as nn
 from torchmetrics import Accuracy, Precision, Recall
@@ -6,13 +7,25 @@ import sys
 from tqdm import tqdm
 from typing import TextIO
 
+d0 = 1  # input dimension
+d1 = 10 # number of output
+verbose = True
+
 c0 = 1
 c1 = 64
 c2 = 256
-fc0 = 516
+fc0 = 512
 cls = 10  # number of classes
 
-device = torch.device('cuda' if torch.cuda_is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+def maxpool_dim(h, w, *,  kernel, stride=None, padding=0, dilation=1):
+    if stride is None:
+        stride = kernel
+    func = lambda k: ((k + 2 * padding - dilation * (kernel - 1) - 1)/stride) + 1
+    return math.floor(func(h)), math.floor(func(w))
+            
+
 
 class Model(nn.Module):
 
@@ -21,21 +34,29 @@ class Model(nn.Module):
         self.filter = nn.Sequential(
             # grayscale immage, out-channel = 64, simple feature like edgeslarge 
             # large kernel size to focus more on general shape
-            nn.Conv2d(in_channels=c0, out_channels=c1, kernel_size=4, padding=2), 
+            # (1, 28, 28) --> (64, 28, 28)
+            nn.Conv2d(in_channels=d0, out_channels=c1, kernel_size=4, padding=2), 
             nn.ReLU(),
+            # (64, 28, 28) --> (64, 14, 14)
             nn.MaxPool2d(kernel_size=2, stride=2),
             # out-channel = 256, more complex feature and details
-            nn.Conv2d(in_channels=c1, out_channels=c2, kernel_size=2, padding=1),
+            # (64, 14, 14) --> (128, 14, 14)
+            nn.Conv2d(in_channels=c1, out_channels=c1*2, kernel_size=2, padding=1),
             nn.ReLU(),
-            nn.Flatten()
+            # (128, 14, 14) --> (128, 7, 7)
+            nn.MaxPool2d(kernel_size=2, stride=2)
         )
 
+        #
+        hx, wx = maxpool_dim(14, 14, kernel=2, stride=2)
+
         self.classifier = nn.Sequential(
-            nn.Linear(c2 * 16, fc0),
+            nn.Flatten(),
+            nn.Linear(hx*wx*128, fc0),
             nn.ReLU(),
             nn.Dropout(p=0.5),
             nn.Linear(fc0, fc0),
-            nn.RelU(),
+            nn.ReLU(),
             nn.Linear(fc0, cls)
         )
 
@@ -47,14 +68,14 @@ class Model(nn.Module):
         probablities = self.predict(logits)
         return probablities
     
-model = Model()
+forward_pass = Model()
 
 
 # loss function
 criterion = nn.CrossEntropyLoss()
 
 
-def train_model(epochs: int, verbose: bool = False, out: TextIO = sys.stdout) :
+def train_model(epochs: int = 3, *, verbose: bool = False, out: TextIO = sys.stdout) :
 
     kwargs = {'task': 'multiclass', 'num_classes': cls}
     accuracy = Accuracy(**kwargs)
@@ -65,8 +86,8 @@ def train_model(epochs: int, verbose: bool = False, out: TextIO = sys.stdout) :
 
     for epoch in range(epochs):
         print(f'epoch {epoch + 1}/{epochs}', file=out)
-        for (images, labels) in dataset.train:
-            probabilities = model(images, dim=1)
+        for index, (images, labels) in enumerate(tqdm(dataset.train_loader)):
+            probabilities = forward_pass(images)
             predictions = torch.argmax(probabilities, dim=1)
             accuracy.update(predictions, labels)
             precision.update(predictions, labels)
@@ -82,7 +103,6 @@ def train_model(epochs: int, verbose: bool = False, out: TextIO = sys.stdout) :
 def test_model():
     pass
         
-
-
+train_model(verbose=True)
 
 
