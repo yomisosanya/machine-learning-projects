@@ -1,6 +1,7 @@
 import argparse
 import base
 import dataset
+import os
 import torch
 import torch.nn as nn
 from torchmetrics import Accuracy, Precision, Recall
@@ -35,9 +36,9 @@ class Model(nn.Module):
                              batch_first=True
                             )
         self.classifier = nn.Sequential(
-            nn.Linear(self.hidden_size, 64),
+            nn.Linear(self.hidden_size, 16),
             nn.ReLU(),
-            nn.Linear(64, out_size)
+            nn.Linear(16, out_size)
         )
 
     def zeroes(self, x):
@@ -61,7 +62,7 @@ class Model(nn.Module):
     
 # default values
 in_size = 28
-hidden_size = 128
+hidden_size = 16
 rlayers = 2
 out_size = 10
 dropout_rate = 0.4
@@ -77,7 +78,7 @@ criterion = nn.CrossEntropyLoss()
 
 
 @torch.no_grad()
-def evaluate(loader, validate):
+def evaluate(loader):
     model.eval()
     total_loss = 0.0
     total_acc = 0.0
@@ -91,13 +92,10 @@ def evaluate(loader, validate):
         total_acc += (predictions == labels).float().sum().item()
         bs = labels.size(0)
         n += bs
-        if validate:
-            loss = criterion(probabilities, labels)
-            total_loss += loss.item() * bs
-    if validate:
-        return (total_loss / n), (total_acc / n)
-    else:
-        return total_acc / n
+        loss = criterion(probabilities, labels)
+        total_loss += loss.item() * bs
+
+    return (total_loss / n), (total_acc / n)
 
 
 def train_model(*, 
@@ -132,22 +130,25 @@ def train_model(*,
         train_loss = running_loss / n
         train_acc = running_acc / n
         print('validation...')
-        val_loss, val_acc = evaluate(dataset.validation_loader, validate=True)
+        val_loss, val_acc = evaluate(dataset.validation_loader)
         print(f'Epoch {epoch:02d}')
         print(f'training loss: {train_loss:.4f}')
         print(f'validation loss: {val_loss:.4f}')
         print(f'accuracy: {val_acc:.4f}')
 
-    with shelve.open('lstm.store') as f:
-        if 'loss' in f:
-            if f['loss'] > val_loss:
-                torch.save(model.state_dict(), dest_path)
-                f['loss'] = val_loss
+        torch.save(model.state_dict(), dest_path)
+        
+
+    # with shelve.open('lstm.store') as f:
+       # if 'loss' in f:
+           # if f['loss'] > val_loss:
+               # torch.save(model.state_dict(), dest_path)
+               # f['loss'] = val_loss
 
 
 def test_model():
     model.load_state_dict(torch.load(dest_path, map_location=device))
-    loss, acc = evaluate(dataset.test_loader, validate=False)
+    loss, acc = evaluate(dataset.test_loader)
     print(f'Test')
     print(f'loss: {loss:.4f}')
     print(f'accuracy: {acc:.4f}')

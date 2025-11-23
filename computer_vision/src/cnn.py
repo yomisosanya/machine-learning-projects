@@ -11,9 +11,9 @@ from typing import TextIO
 d0 = 1  # input dimension
 d1 = 10 # number of output
 
-c1 = 64  # filter 1
-c2 = 256 # filter 2
-fc0 = 512
+c1 = 8  # filter 1
+c2 = 12 # filter 2
+fc0 = 16
 cls = 10  # number of classes
 
 dest_path = 'cnn_model.pt'
@@ -35,16 +35,16 @@ class Model(nn.Module):
         self.filter = nn.Sequential(
             # grayscale immage, out-channel = 64, simple feature like edgeslarge 
             # large kernel size to focus more on general shape
-            # (1, 28, 28) --> (64, 28, 28)
+            # (1, 28, 28) --> (8, 28, 28)
             nn.Conv2d(in_channels=d0, out_channels=c1, kernel_size=4, padding=2), 
             nn.ReLU(),
-            # (64, 28, 28) --> (64, 14, 14)
+            # (8, 28, 28) --> (8, 14, 14)
             nn.MaxPool2d(kernel_size=2, stride=2),
             # out-channel = 256, more complex feature and details
-            # (64, 14, 14) --> (128, 14, 14)
-            nn.Conv2d(in_channels=c1, out_channels=c1*2, kernel_size=2, padding=1),
+            # (8, 14, 14) --> (12, 14, 14)
+            nn.Conv2d(in_channels=c1, out_channels=c2, kernel_size=2, padding=1),
             nn.ReLU(),
-            # (128, 14, 14) --> (128, 7, 7)
+            # (12, 14, 14) --> (12, 7, 7)
             nn.MaxPool2d(kernel_size=2, stride=2)
         )
 
@@ -52,16 +52,16 @@ class Model(nn.Module):
         hx, wx = maxpool_dim(14, 14, kernel=2, stride=2)
 
         self.classifier = nn.Sequential(
-            # (128, 7, 7) --> (64, 128*7*7)
+            # (12, 7, 7) --> (12, 12*7*7)
             nn.Flatten(),
-            # (64, 6272) --> (6272, 512)
-            nn.Linear(hx*wx*128, fc0),
+            # (12, 588) --> (588, 16)
+            nn.Linear(hx*wx*c2, fc0),
             nn.ReLU(),
             nn.Dropout(p=0.5),
-            # (6272,512) --> (512, 512)
-            nn.Linear(fc0, fc0),
-            nn.ReLU(),
-            # (512, 512) --> (512, 10)
+            # (588, 16) --> (16, 16)
+           # nn.Linear(fc0, fc0),
+           # nn.ReLU(),
+            # (16, 16) --> (16, 10)
             nn.Linear(fc0, cls)
         )
 
@@ -80,6 +80,10 @@ criterion = nn.CrossEntropyLoss()
 best_val = float('inf')
 
 
+def display_details(args):
+    print(f'')
+    print(f'')
+    print(f'')
 
 def accuracy(logits, y):
     return (logits.argmax(1) == y).float().mean().item()
@@ -131,7 +135,6 @@ def train_model(epochs, *, optimizer, verbose: bool = False):
         print('validation...')
         val_loss, val_acc = evaluate(dataset.validation_loader)
 
-        print(f'Epoch {epoch:02d}')
         print(f'training loss: {train_loss:.4f}')
         print(f'validation loss: {val_loss:.4f}')
         print(f'accuracy: {val_acc:.4f}')
